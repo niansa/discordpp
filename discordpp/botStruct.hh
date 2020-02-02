@@ -12,47 +12,48 @@
 #include <nlohmann/json.hpp>
 
 namespace discordpp{
-	using json = nlohmann::json;
+    using json = nlohmann::json;
 
-	struct ratelimit{
-		int millis;
-	};
+    struct ratelimit{
+        int millis;
+    };
 
-	class BotStruct{
-	public:
-		virtual ~BotStruct() = default;
+    class BotStruct{
+    public:
+        virtual ~BotStruct() = default;
 
-		virtual json call(std::string requestType, std::string targetURL, json body = {}) = 0;
+        virtual std::future<json>
+        call(const std::string &requestType, const std::string &targetURL, const json &body = {}) = 0;
 
-		virtual void send(int opcode, json payload = {}) = 0;
+        virtual void send(int opcode, json payload = {}) = 0;
 
-		void run(){
-			bool ready = true;
-			for(auto module: needInit){
-				if(module.second){
-					std::cerr << "Forgot to initialize: " << module.first << '\n';
-					ready = false;
-				}
-			}
-			if(ready){
-				runctd();
-			}
-		}
+        void run(){
+            bool ready = true;
+            for(auto module: needInit){
+                if(module.second){
+                    std::cerr << "Forgot to initialize: " << module.first << '\n';
+                    ready = false;
+                }
+            }
+            if(ready){
+                runctd();
+            }
+        }
 
-	protected:
-		virtual void runctd(){
-			std::cerr << "Starting run loop" << '\n';
-			aioc->run();
-			std::cerr << "Ending run loop" << '\n';
-		}
+    protected:
+        virtual void runctd(){
+            std::cerr << "Starting run loop" << '\n';
+            aioc->run();
+            std::cerr << "Ending run loop" << '\n';
+        }
 
-		virtual void recievePayload(json payload) = 0;
+        virtual void recievePayload(json payload) = 0;
 
-		std::map<std::string, bool> needInit;
-		unsigned int apiVersion = 6;
-		std::shared_ptr<boost::asio::io_context> aioc;
-		std::string token;
-	};
+        std::map<std::string, bool> needInit;
+        unsigned int apiVersion = 6;
+        std::shared_ptr<boost::asio::io_context> aioc;
+        std::string token;
+    };
 }
 
 #endif //EXAMPLE_BOT_BOTREQUIRED_HH
