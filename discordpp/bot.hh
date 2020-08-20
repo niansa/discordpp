@@ -49,6 +49,16 @@ class Bot : public virtual BotStruct {
         needInit["Bot"] = false;
     }
 
+    void reconnect(const bool resume = true) override {
+        std::cerr << "Reconnecting...\n";
+        if (!resume) {
+            sequence_ = -1;
+            session_id_ = "";
+        }
+        pacemaker_->cancel();
+        disconnect();
+        connect();
+    }
   protected:
     void sendHeartbeat(const boost::system::error_code e) {
         if (e.failed()) {
@@ -143,17 +153,6 @@ class Bot : public virtual BotStruct {
             std::cerr << "Unexpected opcode " << payload["op"] << "! Message:\n"
                       << payload.dump(4) << '\n';
         }
-    }
-
-    void reconnect(const bool resume = true) override {
-        std::cerr << "Reconnecting...\n";
-        if (!resume) {
-            sequence_ = -1;
-            session_id_ = "";
-        }
-        pacemaker_->cancel();
-        disconnect();
-        connect();
     }
 };
 } // namespace discordpp
