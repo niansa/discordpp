@@ -56,9 +56,10 @@ class Bot : public virtual BotStruct {
             session_id_ = "";
         }
         pacemaker_->cancel();
-        disconnect();
-        connect();
+        disconnect(
+            std::make_shared<std::function<void()>>([this]() { connect(); }));
     }
+
   protected:
     void sendHeartbeat(const boost::system::error_code e) {
         if (e.failed()) {

@@ -61,7 +61,7 @@ class BotStruct {
     }
 
     virtual void connect() = 0;
-    virtual void disconnect() = 0;
+    virtual void disconnect(const std::shared_ptr<std::function<void()>> after) = 0;
     virtual void reconnect(const bool resume = true) = 0;
 
     virtual void receivePayload(json payload) = 0;
