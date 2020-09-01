@@ -152,7 +152,7 @@ class Bot : public virtual BotStruct {
             session_id_ = "";
         }
         pacemaker_->cancel();
-        disconnect(std::make_shared<std::function<void()>>([this](){connect();}));
+        disconnect();
     }
 };
 } // namespace discordpp
