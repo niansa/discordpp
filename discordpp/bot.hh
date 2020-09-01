@@ -145,6 +145,8 @@ class Bot : public virtual BotStruct {
         }
     }
 
+  public:
+
     void reconnect(const bool resume = true) override {
         std::cerr << "Reconnecting...\n";
         if (!resume) {

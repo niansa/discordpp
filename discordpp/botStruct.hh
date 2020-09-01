@@ -62,8 +62,11 @@ class BotStruct {
 
     virtual void connect() = 0;
     virtual void disconnect() = 0;
+
+  public:
     virtual void reconnect(const bool resume = true) = 0;
 
+  protected:
     virtual void receivePayload(json payload) = 0;
 
     std::map<std::string, bool> needInit;
